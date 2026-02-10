@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "5001:5000"
+    environment:
+      - MONGO_URI=mongodb://auth-db:27017/auth_db
+      - JWT_SECRET=supersecret
+    depends_on:
+      - auth-db
+
+  auth-db:
+    image: mongo:6
+    volumes:
+      - auth-data:/data/db
+
+  upload-service:
+    build: ./upload-service
+    ports:
+      - "5002:5000"
+    environment:
+      - MONGO_URI=mongodb://upload-db:27017/upload_db
+      - JWT_SECRET=supersecret
+    depends_on:
+      - upload-db
+
+  upload-db:
+    image: mongo:6
+    volumes:
+      - upload-data:/data/db
+
+volumes:
+  auth-data:
+  upload-data:
