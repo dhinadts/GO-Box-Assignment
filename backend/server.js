@@ -20,8 +20,14 @@ const connectDB = async () => {
 
 };
 
+
+
 app.use('/api/auth', require('./services/auth-services/routes/auth_routes'));
 app.use('/api/files', require('./services/upload-services/routes/upload_routes'));
+
+app.use('/', (req, res) => {
+    res.send('Go Box Backend is running');
+});
 
 app.listen(5000, async () => {
     await connectDB();
