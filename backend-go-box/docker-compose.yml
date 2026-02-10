@@ -1,36 +1,38 @@
-version: "3.8"
+version: "3.9"
 
 services:
   auth-service:
-    build: ./auth-service
+    build: ./services/auth-service
+    container_name: auth-service
     ports:
       - "5001:5000"
-    environment:
-      - MONGO_URI=mongodb://auth-db:27017/auth_db
-      - JWT_SECRET=supersecret
+    env_file:
+      - .env
     depends_on:
-      - auth-db
-
-  auth-db:
-    image: mongo:6
-    volumes:
-      - auth-data:/data/db
+      - auth-mongo
 
   upload-service:
-    build: ./upload-service
+    build: ./services/upload-service
+    container_name: upload-service
     ports:
       - "5002:5000"
-    environment:
-      - MONGO_URI=mongodb://upload-db:27017/upload_db
-      - JWT_SECRET=supersecret
+    env_file:
+      - .env
     depends_on:
-      - upload-db
+      - upload-mongo
 
-  upload-db:
-    image: mongo:6
+  auth-mongo:
+    image: mongo:7
+    container_name: auth-mongo
     volumes:
-      - upload-data:/data/db
+      - auth_db:/data/db
+
+  upload-mongo:
+    image: mongo:7
+    container_name: upload-mongo
+    volumes:
+      - upload_db:/data/db
 
 volumes:
-  auth-data:
-  upload-data:
+  auth_db:
+  upload_db:
